@@ -9,6 +9,7 @@ This project aims to develop a simple 2D "Parkour" game with [Cocos2d-x 3.x](www
 - Platform: Win32, Android
 - The number of player: Single
 - Project Milestone Dates:  
+
 | Milestone | Date |
 | ------------- | ------------- |
 | Kick Off  | 2015/03/30  |
