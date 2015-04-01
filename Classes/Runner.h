@@ -56,6 +56,8 @@ public:
 	 */
 	void initBody();
 
+	virtual void update(float delta);
+
 	/**
 	 * @brief    Getter of _state attribute
 	 * @return    the state of the runner
@@ -84,6 +86,8 @@ public:
 	}
 
 	void Run();
+
+	void Jump();
 
 private:
 	cocos2d::Sprite *_runnerSprite;

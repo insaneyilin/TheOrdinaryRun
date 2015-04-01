@@ -20,8 +20,9 @@ using namespace CocosDenshion;
 Scene* PlayScene::createScene()
 {
 	auto scene = Scene::createWithPhysics();
-	//scene->getPhysicsWorld()->
-	//	setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->
+		setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setGravity(Vec2(0, -1000));
 
 	auto layer = PlayScene::create();
 	layer->setPhysicsWorld(scene->getPhysicsWorld());
@@ -38,7 +39,7 @@ bool PlayScene::init()
 	}
 
 	_groundHeight = 57;
-	_runnerPosX = 80;
+	_runnerPosX = 144;
 
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("putong_disco.wav", true);
 
@@ -51,6 +52,8 @@ bool PlayScene::init()
 	_runner->setPosition(_runnerPosX, _groundHeight + 26);
 	_runner->Run();
 	addChild(_runner);
+
+	addEventListeners();
 
 	return true;
 }
@@ -122,4 +125,16 @@ void PlayScene::update(float delta)
 	_bgSprite2->setPositionX(posX2);  
 	_groundSprite1->setPositionX(posX1);  
 	_groundSprite2->setPositionX(posX2);  
+}
+
+void PlayScene::addEventListeners()
+{
+    auto touchListener = EventListenerTouchOneByOne::create();
+	touchListener->onTouchBegan = [this](Touch *t, Event *e)
+	{
+		_runner->Jump();
+		return false;
+	};
+	Director::getInstance()->getEventDispatcher()->
+		addEventListenerWithSceneGraphPriority(touchListener, this);
 }

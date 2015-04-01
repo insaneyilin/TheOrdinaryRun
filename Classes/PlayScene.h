@@ -65,6 +65,7 @@ public:
 
 private:
 	void initPhysicsWorld();
+	void addEventListeners();
 
 private:
 	cocos2d::PhysicsWorld *_physicsWorld;
