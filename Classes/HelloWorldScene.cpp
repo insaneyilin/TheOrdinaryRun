@@ -1,12 +1,29 @@
+/**
+ * @file HelloWorldScene.cpp
+ * @date 2015/04/01
+ *
+ * @author Yilin Gui
+ * Contact: yilin.gui@gmail.com
+ *
+ * @brief  Implementation of the "Main Menu" Scene class
+ * 
+ * TODO: 
+ *
+ */
+
 #include "HelloWorldScene.h"
+#include "SimpleAudioEngine.h"
+#include "PlayScene.h"
 
 USING_NS_CC;
+using namespace CocosDenshion;
+
 
 Scene* HelloWorld::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::create();
-    
+
     // 'layer' is an autorelease object
     auto layer = HelloWorld::create();
 
@@ -20,72 +37,53 @@ Scene* HelloWorld::createScene()
 // on "init" you need to initialize your instance
 bool HelloWorld::init()
 {
-    //////////////////////////////
-    // 1. super init first
+    // super init first
     if ( !Layer::init() )
     {
         return false;
     }
     
-    Size visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    _visibleSize = Director::getInstance()->getVisibleSize();
+	_centerPoint = Vec2(_visibleSize.width / 2, _visibleSize.height / 2);
 
-    /////////////////////////////
-    // 2. add a menu item with "X" image, which is clicked to quit the program
-    //    you may modify it.
+	preLoadMusic();           // load music
+	createBackGround();    // create background
+	createButton(_centerPoint + Vec2(0, -50));  // create button
 
-    // add a "close" icon to exit the progress. it's an autorelease object
-    auto closeItem = MenuItemImage::create(
-                                           "CloseNormal.png",
-                                           "CloseSelected.png",
-                                           CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
-    
-	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
-                                origin.y + closeItem->getContentSize().height/2));
-
-    // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem, NULL);
-    menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 1);
-
-    /////////////////////////////
-    // 3. add your codes below...
-
-    // add a label shows "Hello World"
-    // create and initialize a label
-    
-    auto label = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
-    
-    // position the label on the center of the screen
-    label->setPosition(Vec2(origin.x + visibleSize.width/2,
-                            origin.y + visibleSize.height - label->getContentSize().height));
-
-    // add the label as a child to this layer
-    this->addChild(label, 1);
-
-    // add "HelloWorld" splash screen"
-    auto sprite = Sprite::create("HelloWorld.png");
-
-    // position the sprite on the center of the screen
-    sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-
-    // add the sprite as a child to this layer
-    this->addChild(sprite, 0);
-    
     return true;
 }
 
-
-void HelloWorld::menuCloseCallback(Ref* pSender)
+void HelloWorld::createBackGround()
 {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
-    return;
-#endif
+	// create a Sprite instance with an image
+	auto spriteBG = Sprite::create("putong_bg2.png");
+	spriteBG->setPosition(_centerPoint);
+	addChild(spriteBG);
+}
 
-    Director::getInstance()->end();
+void HelloWorld::createButton(const cocos2d::Vec2& pt)
+{
+	auto menuItem = MenuItemImage::create(
+		"start_1.png", 
+		"start_1.png", 
+		CC_CALLBACK_0(HelloWorld::startGame, this));
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
-#endif
+	auto menu = Menu::create(menuItem, NULL);
+	menu->setPosition(pt);
+	addChild(menu);
+}
+
+void HelloWorld::preLoadMusic()
+{
+	auto audioEngine = SimpleAudioEngine::getInstance();
+	audioEngine->preloadBackgroundMusic("putong_disco.wav");
+	audioEngine->preloadEffect("poi.wav");
+	audioEngine->preloadEffect("nico.wav");
+}
+
+void HelloWorld::startGame()
+{
+	//MessageBox("Game Start!", "start");
+	Scene *playScene = TransitionFade::create(1.0f, PlayScene::createScene());
+	Director::getInstance()->replaceScene(playScene);
 }
