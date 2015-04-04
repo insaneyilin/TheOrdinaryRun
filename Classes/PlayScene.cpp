@@ -14,15 +14,16 @@
 #include "PlayScene.h"
 #include "SimpleAudioEngine.h"
 #include "BaseManager.h"
+
 USING_NS_CC;
 using namespace CocosDenshion;
 
 Scene* PlayScene::createScene()
 {
 	auto scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->
-		setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-	scene->getPhysicsWorld()->setGravity(Vec2(0, -1000));
+	//scene->getPhysicsWorld()->
+	//	setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setGravity(Vec2(0, -1200));
 
 	auto layer = PlayScene::create();
 	layer->setPhysicsWorld(scene->getPhysicsWorld());
@@ -40,20 +41,25 @@ bool PlayScene::init()
 
 	_groundHeight = 57;
 	_runnerPosX = 144;
+	_bgMoveSpeed = 4;
 
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("putong_disco.wav", true);
 
 	initPhysicsWorld();
 	initBG();
 	scheduleUpdate();
+
 	auto _baseManager =BaseManager::create();
+	_baseManager->setBgMoveSpeed(_bgMoveSpeed);
 	addChild(_baseManager);
+
 	_runner = Runner::create();
 	_runner->setPosition(_runnerPosX, _groundHeight + 26);
 	_runner->Run();
 	addChild(_runner);
 
 	addEventListeners();
+	addContactListeners();
 
 	return true;
 }
@@ -104,21 +110,21 @@ void PlayScene::update(float delta)
 	int posX1 = _bgSprite1->getPositionX();
 	int posX2 = _bgSprite2->getPositionX();
 
-	posX1 -= 2;
-	posX2 -= 2;
+	posX1 -= _bgMoveSpeed;
+	posX2 -= _bgMoveSpeed;
 
 	auto mapSize = _bgSprite1->getContentSize();
 	//CCLOG("mapSize is %f  %f",mapSize.width,mapSize.height);
 	if (posX1 < -mapSize.width / 2)
 	{
 		posX1 = mapSize.width + mapSize.width / 2;
-		posX2 = mapSize.width/2;
+		posX2 = mapSize.width / 2;
 	}
 
-	if (posX2 < -mapSize.width/2)
+	if (posX2 < -mapSize.width / 2)
 	{  
-		posX2 = mapSize.width + mapSize.width/2;  
-		posX1 = mapSize.width/2;  
+		posX2 = mapSize.width + mapSize.width / 2;  
+		posX1 = mapSize.width / 2;  
 	}  
 
 	_bgSprite1->setPositionX(posX1);  
@@ -137,4 +143,29 @@ void PlayScene::addEventListeners()
 	};
 	Director::getInstance()->getEventDispatcher()->
 		addEventListenerWithSceneGraphPriority(touchListener, this);
+}
+
+void PlayScene::addContactListeners()
+{
+	auto contactListenner = EventListenerPhysicsContact::create();  
+	contactListenner->onContactBegin = [this](PhysicsContact &contact)
+	{
+		//MessageBox("aaa", "test");
+		auto b_1 = (Sprite* )contact.getShapeA()->getBody()->getNode();  
+		auto b_2 = (Sprite* )contact.getShapeB()->getBody()->getNode();
+
+		if (b_1->getTag() == coinTag)
+		{  
+			b_1->setVisible(false);  
+		}  
+
+		if (b_2->getTag() == coinTag)
+		{  
+			b_2->setVisible(false);  
+		}  
+
+		return false;
+	};
+	Director::getInstance()->getEventDispatcher()->
+		addEventListenerWithSceneGraphPriority(contactListenner, this);
 }

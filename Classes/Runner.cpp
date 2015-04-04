@@ -21,6 +21,9 @@ bool Runner::init()
 	_runnerSprite = Sprite::create();
 	_runnerSprite->setContentSize(Size(44, 52));
 
+	_twoStepJump = false;
+	_superRush = false;
+
 	addChild(_runnerSprite);
 	_state = running;
 	initBody();
@@ -50,6 +53,11 @@ void Runner::initBody()
 	this->setPhysicsBody(runnerBody);  
 	getPhysicsBody()->getShape(0)->setRestitution(0.0f);
 	getPhysicsBody()->getShape(0)->setFriction(0.0f);
+	getPhysicsBody()->setRotationEnable(false);
+
+	getPhysicsBody()->setCategoryBitmask(1);
+	getPhysicsBody()->setCollisionBitmask(1);
+	getPhysicsBody()->setContactTestBitmask(1);
 }
 
 void Runner::update(float delta)
@@ -61,7 +69,7 @@ void Runner::update(float delta)
 		//_runnerSprite->stopAllActions();
 		//doAction("jumpDown");
 	}
-	else if (_state == jumpDown && velocity.y > 0.0)
+	else if (_state == jumpDown && velocity.y == 0.0)
 	{
 		_state = running;
 		//_runnerSprite->stopAllActions();
@@ -80,7 +88,7 @@ void Runner::Jump()
 	if (_state == running)
 	{
 		_state = jumpUp;
-		getPhysicsBody()->setVelocity(Vec2(0, 450));
+		getPhysicsBody()->setVelocity(Vec2(0, 600));
 		//_runnerSprite->stopAllActions();
 		//doAction("jumpUp");
 	}
