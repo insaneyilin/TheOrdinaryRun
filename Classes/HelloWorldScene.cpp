@@ -44,6 +44,7 @@ bool HelloWorld::init()
     }
     
     _visibleSize = Director::getInstance()->getVisibleSize();
+	CCLOG("ths size width is %f the size height is %f",_visibleSize.width,_visibleSize.height);
 	_centerPoint = Vec2(_visibleSize.width / 2, _visibleSize.height / 2);
 
 	preLoadMusic();           // load music
