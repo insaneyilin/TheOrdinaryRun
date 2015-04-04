@@ -17,7 +17,7 @@
 class Rock : public Base{
 public:
 	virtual bool init();
-	//void initBody();
+	void initBody();
 	CREATE_FUNC(Rock);
 
 };/**/

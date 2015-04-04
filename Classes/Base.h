@@ -21,7 +21,7 @@ public:
 	~Base();
 	void setSprite(cocos2d::Sprite* sprite);
 	cocos2d::Sprite* getSprite();
-     void initBody();
+    virtual void initBody()=0;
 	cocos2d::Size getConSize();
 	
 private:

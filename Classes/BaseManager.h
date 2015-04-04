@@ -31,8 +31,6 @@ public:
 	void generateShape();
 
 private:
-	void createCoin(const Size&,const Vec2&);
-	void createRock(const Size&,const Vec2&);
 	void manageObject(const Size&,const Vec2&);
 	void setCoinCount(int x);
 	int  getCoinCount();

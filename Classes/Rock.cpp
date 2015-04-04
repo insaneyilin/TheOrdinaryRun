@@ -28,7 +28,7 @@ bool Rock::init(){
 
 	return true;
 }
-/*
+
 void Rock::initBody(){
 	auto phyBody = PhysicsBody::createEdgeBox(getSprite()->getContentSize());
 	phyBody->setCategoryBitmask(1);
@@ -37,4 +37,3 @@ void Rock::initBody(){
 
 	this->setPhysicsBody(phyBody);
 }
-*/

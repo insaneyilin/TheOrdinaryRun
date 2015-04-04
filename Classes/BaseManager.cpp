@@ -1,38 +1,20 @@
+/**
+ *  @Date  2015/04/04 12:35
+ *  @File  BaseManager.cpp 
+ *  
+ *  @Author LiangJian Liu
+ *  @Contact janestar92@163.com
+ *  
+ *  @brief
+ *	
+ */
 #include "BaseManager.h"
 
 #define ground_hight 59
 
 USING_NS_CC;
 
-/*
-int shape[4][4]={
-	1,1,1,1,
-	0,0,0,0,
-	0,0,0,0,
-	0,0,0,0,
-};
 
-int shape2[4][4]={
-	0,1,1,1,
-	0,0,1,0,
-	0,0,0,0,
-	0,0,0,0,
-};
-
-int shape3[4][4]={
-	0,1,1,0,
-	0,0,1,0,
-	0,0,1,0,
-	0,0,0,0,
-};
-
-int shape4[4][4]={
-	0,1,0,0,
-	0,1,0,0,
-	0,1,0,0,
-	0,1,0,0,
-};
-*/
 int shape[4][4][4]={
 	{1,1,1,1,
 	0,0,0,0,
@@ -65,14 +47,10 @@ bool BaseManager::init(){
 	auto size=Director::getInstance()->getVisibleSize();
 	auto origin=Director::getInstance()->getVisibleOrigin();
 	manageObject(size,origin);
-	//createRock(size,origin);
-	//createCoin(size,origin);
 	this->setCoinCount(0);
 	this->setRockCount(0);
-	//this->setRandTime(2.0);
 	this->scheduleUpdate();
-   //this->schedule(schedule_selector(BaseManager::intervalUpdate),_randTime);
-	
+ 
 	return true;
 }
 
@@ -110,8 +88,6 @@ void BaseManager::intervalUpdate(float dt){
 				if(shape[num][j][k]){
 					auto coin=_coinVec.at(cnt);
 					coin->setPosition(Vec2(randx+k*coinx_*3/2,randy+(3-j)*coiny_));
-					//this->addChild(_coin);
-					//_coinVec.pushBack(_coin);
 					coin->setVisible(true);
 					cnt++;
 				}
@@ -127,59 +103,6 @@ void BaseManager::intervalUpdate(float dt){
 	}
 
 
-}
-/*
-  if(_rockCount==2){
-	  float posX = 640+50;
-		float posY = 0;
-		for(auto rock:_rockVec){
-			posX+=CCRANDOM_0_1()*50+70;
-			posY=ground_hight+rock->getConSize().height/2;
-			rock->setPosition(posX,posY);
-			rock->setVisible(true);
-			CCLOG("the x is %f",posX);
-		}
-		_rockCount=0;
-  }
-
-	_randTime=CCRANDOM_0_1()*8+4;
-	//CCLOG("the randtime is %f\n",_randTime);
-}*/
-void BaseManager::createCoin(const Size& size,const Vec2& origin){
-	
-	Coin* coin = NULL;
-	int randx=(int)(CCRANDOM_0_1()*size.width);
-	int randy=(int)(CCRANDOM_0_1()*(size.height-ground_hight)+ground_hight);
-	for(int i = 1; i <= coinNum; ++ i){
-		coin = Coin::create();
-		coin->setPosition(Vec2(randx,randy));
-		//originCoordinate.x+=30;
-		coin->setTag(coinTag);
-		this->addChild(coin);
-		_coinVec.pushBack(coin);
-		
-	}
-}
-
-void BaseManager::createRock(const Size& size,const Vec2& origin){
-	
-	Rock* rock = NULL;
-
-	//float dis = 960;//两岩石的间距
-	
-	for(int i = 1; i <= rockNum; ++ i){
-		rock = Rock::create();
-
-		rock->setTag(rockTag);
-        auto xcoordinate=origin.x+size.width*2/3;
-		rock->setPosition(xcoordinate,ground_hight+rock->getConSize().height/2);
-		xcoordinate+=640;
-
-		this->addChild(rock);
-		_rockVec.pushBack(rock);
-	
-	}
-	
 }
 
 void BaseManager::manageObject(const Size& size,const Vec2& origin){

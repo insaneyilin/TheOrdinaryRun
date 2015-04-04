@@ -31,12 +31,3 @@ Size Base::getConSize(){
 }
 
 
-void Base::initBody(){
-	//auto phyBody=PhysicsBody::createCircle(getSprite()->getContentSize().width/2);
-	auto phyBody = PhysicsBody::createEdgeBox(getSprite()->getContentSize());
-	phyBody->setCategoryBitmask(1);
-	phyBody->setCollisionBitmask(1);
-	phyBody->setContactTestBitmask(1);
-
-	this->setPhysicsBody(phyBody);
-}

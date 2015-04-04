@@ -16,7 +16,7 @@
 class Coin : public Base{
 public:
 	virtual bool init();
-   // void initBody();
+    void initBody();
 	CREATE_FUNC(Coin);
 	cocos2d::Animate* createAnimate(cocos2d::SpriteFrameCache* frameCache);
 
