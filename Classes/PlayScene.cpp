@@ -13,7 +13,7 @@
 
 #include "PlayScene.h"
 #include "SimpleAudioEngine.h"
-
+#include "BaseManager.h"
 USING_NS_CC;
 using namespace CocosDenshion;
 
@@ -45,9 +45,9 @@ bool PlayScene::init()
 
 	initPhysicsWorld();
 	initBG();
-
 	scheduleUpdate();
-
+	auto _baseManager =BaseManager::create();
+	addChild(_baseManager);
 	_runner = Runner::create();
 	_runner->setPosition(_runnerPosX, _groundHeight + 26);
 	_runner->Run();
@@ -76,7 +76,7 @@ void PlayScene::initPhysicsWorld()
 void PlayScene::initBG()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
-
+//	CCLOG("the visiblesize is %f  %f",visibleSize.width,visibleSize.height);
 	_bgSprite1 = Sprite::create("Map00.png");
 	_bgSprite1->setPosition(visibleSize/2);
 	addChild(_bgSprite1);
@@ -108,7 +108,7 @@ void PlayScene::update(float delta)
 	posX2 -= 2;
 
 	auto mapSize = _bgSprite1->getContentSize();
-
+	//CCLOG("mapSize is %f  %f",mapSize.width,mapSize.height);
 	if (posX1 < -mapSize.width / 2)
 	{
 		posX1 = mapSize.width + mapSize.width / 2;
