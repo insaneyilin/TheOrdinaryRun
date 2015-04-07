@@ -156,8 +156,6 @@ void BaseManager::update(float dt)
 
 	if (_rockCount == 2 && _coinCount == 4)
 	{
-		//CCLOG("the origin x is %f,the y is %f",origin.x,origin.y);
-		//int second_map_start=
 		int xcoordinate = size.width + size.width / 2;
 		for (auto rock : _rockVec)
 		{
