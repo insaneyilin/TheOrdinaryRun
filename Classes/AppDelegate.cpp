@@ -31,7 +31,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 		glview->setFrameSize(640, 320);
         director->setOpenGLView(glview);
     }
-
+	auto size=glview->getFrameSize();
+	//auto size=director->getWinSizeInPixels();
+	CCLOG("ths size width is %f the size height is %f",size.width,size.height);
     // turn on display FPS
     director->setDisplayStats(true);
 
