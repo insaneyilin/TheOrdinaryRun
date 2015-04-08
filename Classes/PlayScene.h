@@ -16,6 +16,7 @@
 
 #include "cocos2d.h"
 #include "Runner.h"
+#include "BaseManager.h"
 
 class PlayScene : public cocos2d::LayerColor
 {
@@ -41,6 +42,11 @@ public:
 	void initBG();
 
 	/**
+	 * @brief      Build UI componets. (pause button, score label, etc.)
+	 */
+	void buildUI();
+
+	/**
 	 * @brief      Callback function, using with scheduleUpdate()
 	 */
 	virtual void update(float delta);
@@ -63,24 +69,40 @@ public:
 		return _physicsWorld;
 	}
 
+	/**
+	 * @brief    Pause the game
+	 */
+	void onGamePause();
+
+	/**
+	 * @brief    Resume the game
+	 */
+	void onGameResume();
+	
+
 private:
 	void initPhysicsWorld();
 	void addEventListeners();
 	void addContactListeners();
 
 private:
+	cocos2d::Size _visibleSize;
+
 	cocos2d::PhysicsWorld *_physicsWorld;
 
 	float _groundHeight;
 	float _runnerPosX;
 
 	Runner *_runner;
+	BaseManager *_baseManager;
 
 	cocos2d::Sprite *_bgSprite1;
 	cocos2d::Sprite *_bgSprite2;
 	cocos2d::Sprite *_groundSprite1;
 	cocos2d::Sprite *_groundSprite2;
-	
+
+	cocos2d::Sprite *_pauseButton;
+
     float _bgMoveSpeed;
 };
 

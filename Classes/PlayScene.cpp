@@ -15,6 +15,7 @@
 #include "SimpleAudioEngine.h"
 #include "BaseManager.h"
 #include "GameOverScene.h"
+#include "PauseLayer.h"
 
 USING_NS_CC;
 using namespace CocosDenshion;
@@ -40,6 +41,8 @@ bool PlayScene::init()
 		return false;
 	}
 
+	_visibleSize = Director::getInstance()->getVisibleSize();
+
 	_groundHeight = 57;  // 地面高度
 	_runnerPosX = 144;   // 角色x坐标位置
 	_bgMoveSpeed = 4;  // 背景滚动速度
@@ -51,6 +54,8 @@ bool PlayScene::init()
 
 	initBG();  // 初始化背景
 
+	buildUI();  // 创建 UI 组件
+
 	// 创建奔跑角色对象
 	_runner = Runner::create();
 	_runner->setPosition(_runnerPosX, _groundHeight + 26);
@@ -58,7 +63,7 @@ bool PlayScene::init()
 	addChild(_runner);
 
 	// 创建道具管理对象
-	auto _baseManager =BaseManager::create();
+	_baseManager =BaseManager::create();
 	_baseManager->setBgMoveSpeed(_bgMoveSpeed);
 	addChild(_baseManager);
 
@@ -148,7 +153,15 @@ void PlayScene::addEventListeners()
     auto touchListener = EventListenerTouchOneByOne::create();
 	touchListener->onTouchBegan = [this](Touch *t, Event *e)
 	{
-		_runner->Jump();
+		if (_pauseButton->
+			getBoundingBox().containsPoint(t->getLocation()))
+		{
+			onGamePause();
+		}
+		else
+		{
+            _runner->Jump();
+		}
 		return false;
 	};
 	Director::getInstance()->getEventDispatcher()->
@@ -184,4 +197,29 @@ void PlayScene::addContactListeners()
 
 	Director::getInstance()->getEventDispatcher()->
 		addEventListenerWithSceneGraphPriority(contactListenner, this);
+}
+
+void PlayScene::buildUI()
+{
+	_pauseButton = Sprite::create("pause_1.png");
+	_pauseButton->setPosition(
+		_visibleSize.width - _pauseButton->getContentSize().width / 2, 
+		_visibleSize.height - _pauseButton->getContentSize().height / 2);
+	addChild(_pauseButton);
+}
+
+void PlayScene::onGamePause()
+{
+	Director::getInstance()->pause();
+	// 暂时禁用人物刚体，防止暂停后人物仍受重力影响
+	_runner->getPhysicsBody()->setEnable(false);
+
+	auto pauseLayer = PauseLayer::create();
+	addChild(pauseLayer, 10000);
+}
+
+void PlayScene::onGameResume()
+{
+	Director::getInstance()->resume();
+	_runner->getPhysicsBody()->setEnable(true);
 }
