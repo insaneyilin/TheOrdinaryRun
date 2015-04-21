@@ -1,8 +1,10 @@
 #include "PauseLayer.h"
 #include "PlayScene.h"
 #include "HelloWorldScene.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
+using namespace CocosDenshion;
 
 bool PauseLayer::init()
 {
@@ -60,6 +62,10 @@ void PauseLayer::home(cocos2d::Ref *ref)
 	Director::getInstance()->resume();
 
 	Director::getInstance()->replaceScene(HelloWorld::createScene());
+
+	// ¹Ø±Õ±³¾°ÒôÀÖ
+	auto audioEngine = SimpleAudioEngine::getInstance();
+	audioEngine->playEffect("pickup_coin.wav");
 
 	removeFromParent();
 }
