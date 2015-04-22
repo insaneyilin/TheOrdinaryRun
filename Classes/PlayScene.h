@@ -80,8 +80,9 @@ private:
 	cocos2d::Sprite *_bgSprite2;
 	cocos2d::Sprite *_groundSprite1;
 	cocos2d::Sprite *_groundSprite2;
-	
-    float _bgMoveSpeed;
+	cocos2d::Label* _score;
+	int _score2;
+	float _bgMoveSpeed;
 };
 
 #endif

@@ -15,7 +15,6 @@
 #include "Coin.h"
 #include "Rock.h"
 
-#define mapwidth 1440
 #define coinNum 4
 #define coinTag 2
 #define rockNum 2

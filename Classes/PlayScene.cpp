@@ -15,7 +15,7 @@
 #include "SimpleAudioEngine.h"
 #include "BaseManager.h"
 #include "GameOverScene.h"
-
+#include <string>
 USING_NS_CC;
 using namespace CocosDenshion;
 
@@ -43,6 +43,12 @@ bool PlayScene::init()
 	_groundHeight = 57;  // 地面高度
 	_runnerPosX = 144;   // 角色x坐标位置
 	_bgMoveSpeed = 4;  // 背景滚动速度
+	_score = Label::createWithTTF("00000","fonts/ThonburiBold.ttf",24);
+	_score->setColor(Color3B::BLUE);
+	_score->setPosition(150,160);
+	_score->setVisible(true);
+	addChild(_score,1);
+	_score2=0;
 
 	SimpleAudioEngine::getInstance()->
 		playBackgroundMusic("putong_disco.wav", true);
@@ -166,19 +172,24 @@ void PlayScene::addContactListeners()
 
 		// 与金币碰撞
 		if (b_1->getTag() == coinTag || b_2->getTag() == coinTag)
-		{  
+		{  _score2+=10;
+		   char score[100];
+		   sprintf(score,"%05d",_score2);
+		   std::string s(score);
+		   _score->setString(s);
 			b_1->setVisible(false);  
 		}  
 
 		// 与障碍物碰撞
-		//if (b_1->getTag() == rockTag || b_2->getTag() == rockTag)
-		//{  
-		//	// 停止定时器
-		//	this->unscheduleUpdate();
-		//	Director::getInstance()->
-		//		replaceScene(GameOver::createScene());
-		//}  
-
+		/*
+		if (b_1->getTag() == rockTag || b_2->getTag() == rockTag)
+		{  
+			// 停止定时器
+			this->unscheduleUpdate();
+			Director::getInstance()->
+				replaceScene(GameOver::createScene());
+		}  
+		*/
 		return false;
 	};
 

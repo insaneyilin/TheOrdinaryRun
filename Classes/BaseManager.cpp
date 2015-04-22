@@ -48,7 +48,7 @@ bool BaseManager::init()
 	auto size=Director::getInstance()->getVisibleSize();
 	auto origin=Director::getInstance()->getVisibleOrigin();
 
-	_bgMoveSpeed = 2;
+	//_bgMoveSpeed = 2;
 
 	manageObject(size, origin);
 	this->setCoinCount(0);
@@ -66,7 +66,7 @@ void BaseManager::manageObject(const Size &size, const Vec2 &origin)
 	auto _coinx = coin->getConSize().width;
 	auto _coiny = coin->getConSize().height;
 
-	int xcoordinate = origin.x + size.width * 2 / 3;
+	int xcoordinate = origin.x + size.width;
 	for (int i = 1; i <= rockNum; ++i)
 	{
 		rock = Rock::create();
@@ -75,7 +75,7 @@ void BaseManager::manageObject(const Size &size, const Vec2 &origin)
 			rock->getConSize().height / 2 );
 		this->addChild(rock);
 
-		int gap = CCRANDOM_0_1() * 320 + 480;
+		int gap = CCRANDOM_0_1() *size.width/10 +size.width/4;
 		xcoordinate += gap;
 
 		_rockVec.pushBack(rock);
@@ -83,7 +83,7 @@ void BaseManager::manageObject(const Size &size, const Vec2 &origin)
 
 	int randx = (int)(CCRANDOM_0_1() * size.width);
 	int randy = (int)( CCRANDOM_0_1() * 
-		(size.height - 4 * _coiny * 3 / 2 - ground_hight) + ground_hight );
+		(size.height - 4 * _coiny * 3 / 2 - ground_hight)+ground_hight);
 
 	int rock_x = _rockVec.at(0)->getPositionX();
 	int rock_x2 = _rockVec.at(1)->getPositionX();
