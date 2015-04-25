@@ -79,6 +79,8 @@ public:
 	 */
 	void stopDash();
 
+
+
 	// 位置比例缩放因子
 	static double POS_X_SCALE_FACTOR;
 	static double POS_Y_SCALE_FACTOR;
@@ -155,15 +157,6 @@ private:
 	// 计时标签
 	cocos2d::Label *_timeTextLabel;
 	cocos2d::Label *_timeLabel;  
-
-
-	cocos2d::Sprite *_bgSprite1;
-	cocos2d::Sprite *_bgSprite2;
-	cocos2d::Sprite *_groundSprite1;
-	cocos2d::Sprite *_groundSprite2;
-	cocos2d::Label* _score;
-	int _score2;
-	float _bgMoveSpeed;
 
 	// 得分标签
 	cocos2d::Label *_scoreTextLabel;

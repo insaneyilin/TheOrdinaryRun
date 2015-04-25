@@ -20,12 +20,18 @@ bool PauseLayer::init()
 }
 
 void PauseLayer::buildUI()
-{
-	auto homeItem = MenuItemImage::create(
-		"to_home.png", "to_home_selected.png", 
+{   
+	auto frameCache = SpriteFrameCache::getInstance();
+	frameCache->addSpriteFramesWithFile("gamesource.plist","gamesource.png");
+	auto to_home = Sprite::createWithSpriteFrameName("to_home.png");
+	auto to_home_selected = Sprite::createWithSpriteFrameName("to_home_selected.png");
+	auto homeItem = MenuItemSprite::create(
+		to_home, to_home_selected, 
 		CC_CALLBACK_1(PauseLayer::home, this));
-	auto continueItem = MenuItemImage::create(
-		"continue.png", "continue_selected.png", 
+	auto continued = Sprite::createWithSpriteFrameName("continue.png");
+	auto continue_selected = Sprite::createWithSpriteFrameName("continue_selected.png");
+	auto continueItem = MenuItemSprite::create(
+		continued, continue_selected, 
 		CC_CALLBACK_1(PauseLayer::back, this));
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();

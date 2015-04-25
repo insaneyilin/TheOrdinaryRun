@@ -14,14 +14,31 @@
 #include "cocos2d.h"
 #include "Coin.h"
 #include "Rock.h"
+#include "Accelerator.h"
+#include "magnet.h"
+#include "Runner.h"
 
-#define coinNum 4
-#define coinTag 2
-#define rockNum 2
-#define rockTag 3
 
 USING_NS_CC;
 
+
+enum PROPERTY
+{
+	coinNum = 4,
+	coinTag = 2,
+	rockNum = 2,
+	rockTag = 3,
+	accleratorTag = 4,
+	magnetTag = 5,
+	ground_hight = 59,
+	LARGE_NUM = 1000000,//用于将移出屏幕的障碍物 金币等设置为不可见
+};
+
+
+
+/************************************************************************/
+/* 基本管理类，用于管理各类道具，包括障碍物 金币 加速器等                                                                     */
+/************************************************************************/
 class BaseManager : public cocos2d::Node
 {
 public:
@@ -30,12 +47,17 @@ public:
 	virtual void update(float dt);
 
 private:
-	// important method!
-	void manageObject(const Size&,const Vec2&);
+	/**
+	 * @brief 道具的初始化
+	 * @note 
+	 */
+	void manageObject(Size&,Vec2&);
 	
 	Vector<Coin*> _coinVec;
 	Vector<Rock*> _rockVec;
-
+	Accelerator* _acclerator;
+	Magnet* _magnet;
+	Runner* runner;
 	float _randTime;
 	int _coinCount;
 	int _rockCount;
@@ -43,10 +65,12 @@ private:
 	float _bgMoveSpeed;
 
 public:
-	Vector<Coin*>& getCoins()
-	{
-		return _coinVec;
-	}
+
+	/**
+	 * @brief   use magnet to get the coins
+	 */
+	void getCoinsByMagnet(Runner* runner);
+
 
 	void setBgMoveSpeed(float speed)
 	{
@@ -78,15 +102,6 @@ public:
 		return this->_rockCount;
 	}
 
-	void setRandTime(float y)
-	{
-		this->_randTime=y;
-	}
-
-	float getRandTime() const
-	{
-		return this->_randTime;
-	}
 };
 
 #endif

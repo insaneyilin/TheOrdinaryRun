@@ -57,16 +57,22 @@ bool HelloWorld::init()
 void HelloWorld::createBackGround()
 {
 	// create a Sprite instance with an image
-	auto spriteBG = Sprite::create("putong_bg2.png");
+	auto frameCache = SpriteFrameCache::getInstance();
+	frameCache->addSpriteFramesWithFile("gamesource.plist","gamesource.png");
+	auto spriteBG = Sprite::createWithSpriteFrameName("putong_bg2.png");
 	spriteBG->setPosition(_centerPoint);
 	addChild(spriteBG);
 }
 
 void HelloWorld::createButton(const cocos2d::Vec2& pt)
-{
-	auto menuItem = MenuItemImage::create(
-		"start_1.png", 
-		"start_1.png", 
+{   
+	auto frameCache = SpriteFrameCache::getInstance();
+	frameCache->addSpriteFramesWithFile("gamesource.plist","gamesource.png");
+	auto _start_0 = Sprite::createWithSpriteFrameName("start_0.png");
+	auto _start_1 = Sprite::createWithSpriteFrameName("start_1.png");
+	auto menuItem = MenuItemSprite::create(
+		_start_1, 
+		_start_0, 
 		CC_CALLBACK_0(HelloWorld::startGame, this));
 
 	auto menu = Menu::create(menuItem, NULL);

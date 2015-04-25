@@ -66,8 +66,9 @@ void Runner::initBody()
 }
 
 void Runner::update(float delta)
-{
+{   
 	auto velocity = getPhysicsBody()->getVelocity();
+	
 	if (_state == jumpUp && velocity.y < 0.1)
 	{
 		_state = jumpDown;
