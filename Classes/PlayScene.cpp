@@ -15,6 +15,7 @@
 #include "SimpleAudioEngine.h"
 #include "BaseManager.h"
 #include "GameOverScene.h"
+#include <string>
 #include "PauseLayer.h"
 
 USING_NS_CC;
@@ -26,6 +27,8 @@ double PlayScene::POS_Y_SCALE_FACTOR = 0.04;
 int PlayScene::SCORE_PER_SEC = 20;
 int PlayScene::SCORE_PER_COIN = 100;
 
+unsigned int audioeffect = 0;
+
 /************************************************************************/
 /*                               Public Methods                                           */
 /************************************************************************/
@@ -33,8 +36,9 @@ Scene* PlayScene::createScene()
 {
 	auto scene = Scene::createWithPhysics();
 	//scene->getPhysicsWorld()->
-	//	setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+		//setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, -1200));
+
 
 	auto layer = PlayScene::create();
 	layer->setPhysicsWorld(scene->getPhysicsWorld());
@@ -57,6 +61,7 @@ bool PlayScene::init()
 	_accumTime = 0;  // 初始累积时间为 0
 	_groundHeight = 57;  // 地面高度
 	_runnerPosX = 144;   // 角色x坐标位置
+
 	_bgMoveSpeed = NORMAL_SPEED;  // 背景滚动速度
 
 	_timerRunning = false;  // 初始时计时器关闭
@@ -76,15 +81,15 @@ bool PlayScene::init()
 
 	addEventListeners();  // 添加触摸事件监听
 	addContactListeners();  // 添加碰撞检测监听
-
-	//scheduleUpdate();  // 启动定时器
 	startTimer();
 	
 	return true;
 }
 
 void PlayScene::update(float delta)
-{
+{   
+	
+
 	// 更新计时标签和得分标签
 	if (_timerRunning)
 	{
@@ -168,11 +173,13 @@ void PlayScene::startDash()
 	audioEngine->pauseBackgroundMusic();
 
 	// 播放特效声音
-	audioEngine->playEffect("dash_sound.wav");
+	audioeffect= audioEngine->playEffect("dash_sound.wav");
 
 	_bgMoveSpeed = DASH_SPEED;
 	_baseManager->setBgMoveSpeed(_bgMoveSpeed);
 }
+
+
 
 void PlayScene::stopDash()
 {
@@ -206,26 +213,29 @@ void PlayScene::initBG()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 
+	auto frameCache = SpriteFrameCache::getInstance();
+	frameCache->addSpriteFramesWithFile("gamesource.plist","gamesource.png");
+	_bgSprite1= Sprite::createWithSpriteFrameName("Map00.png");
 	// 背景图片1
-	_bgSprite1 = Sprite::create("Map00.png");
+	//_bgSprite1 = Sprite::create("Map00.png");
 	_bgSprite1->setPosition(visibleSize/2);
 	addChild(_bgSprite1);
 
 	// 地面图片1
-	_groundSprite1 = Sprite::create("Ground00.png");
+	_groundSprite1 = Sprite::createWithSpriteFrameName("Ground00.png");
 	_groundSprite1->setPosition(visibleSize.width / 2, 
 		_groundSprite1->getContentSize().height / 2);
 	addChild(_groundSprite1);
 
 	// 背景图片2
-	_bgSprite2 = Sprite::create("Map01.png");
+	_bgSprite2 = Sprite::createWithSpriteFrameName("Map01.png");
 	_bgSprite2->setPosition(
 		_bgSprite1->getContentSize().width + visibleSize.width / 2, 
 		visibleSize.height / 2);
 	addChild(_bgSprite2);
 
 	// 地面图片2
-	_groundSprite2 = Sprite::create("Ground01.png");
+	_groundSprite2 = Sprite::createWithSpriteFrameName("Ground01.png");
 	_groundSprite2->setPosition(
 		_groundSprite1->getContentSize().width + visibleSize.width / 2, 
 		_groundSprite2->getContentSize().height / 2);
@@ -244,23 +254,14 @@ void PlayScene::buildUI()
 	_baseManager =BaseManager::create();
 	_baseManager->setBgMoveSpeed(_bgMoveSpeed);
 	addChild(_baseManager);
-
+	auto frameCache = SpriteFrameCache::getInstance();
+	frameCache->addSpriteFramesWithFile("gamesource.plist","gamesource.png");
 	// 添加暂停按钮
-	_pauseButton = Sprite::create("pause_1.png");
+	_pauseButton = Sprite::createWithSpriteFrameName("pause_1.png");
 	_pauseButton->setPosition(
 		_visibleSize.width - _pauseButton->getContentSize().width / 2, 
 		_visibleSize.height - _pauseButton->getContentSize().height / 2);
 	addChild(_pauseButton);
-
-	/*******************
-	* FORTEST:
-	* 加速按钮，用于测试加速跑效果
-	*******************/
-	_dashButton = Sprite::create("speed_shoes_40x40.png");
-	_dashButton->setPosition(
-		_visibleSize.width / 2, 
-		_visibleSize.height - _dashButton->getContentSize().height / 2);
-	addChild(_dashButton);
 
 	// 计算计时标签位置（画面左上角）
 	unsigned int leftTopPosX = _visibleSize.width * POS_X_SCALE_FACTOR;
@@ -323,15 +324,6 @@ void PlayScene::addEventListeners()
 		{
 			onGamePause();
 		}
-		else if (_dashButton->
-			getBoundingBox().containsPoint(t->getLocation()))
-		{
-			//_isDash ? stopDash() : startDash();
-			//_isDash = !_isDash;
-			_isDash = true;
-			startDash();  // 点击按钮开始冲刺，后面改为吃道具后冲刺
-			_remainedDashTime = 100000;
-		}
 		else
 		{
             _runner->Jump();
@@ -351,31 +343,43 @@ void PlayScene::addContactListeners()
 		auto b_2 = (Sprite* )contact.getShapeB()->getBody()->getNode();
 
 		// 与金币碰撞
+	   
 		if (b_1->getTag() == coinTag || b_2->getTag() == coinTag)
-		{  
-			// 关闭背景音乐
+		{ 
 			auto audioEngine = SimpleAudioEngine::getInstance();
 			audioEngine->playEffect("pickup_coin.wav");
 			b_1->setVisible(false); 
 			++_countCoins;
+
+		}  
+		
+		// 与障碍物碰撞
+		if (b_1->getTag() == rockTag || b_2->getTag() == rockTag)
+		{  
+			// 停止定时器
+			this->unscheduleUpdate();
+			this->stopTimer();
+			auto audioEngine = SimpleAudioEngine::getInstance();
+			audioEngine->stopBackgroundMusic();
+			audioEngine->stopEffect(audioeffect);
+			Director::getInstance()->
+					replaceScene(GameOver::createScene());
 		}
 
-		/*******************
-		* FIXME:
-		* 第一个障碍物出现的太早，人物来不及跳跃
-		* 考虑使障碍物出现的时间延后
-		*******************/
-		// 与障碍物碰撞
-		//if (b_1->getTag() == rockTag || b_2->getTag() == rockTag)
-		//{  
-		//	// 停止定时器
-		//	//this->unscheduleUpdate();
-		//	this->stopTimer();
-		//	auto audioEngine = SimpleAudioEngine::getInstance();
-		//	audioEngine->stopBackgroundMusic();
-		//	Director::getInstance()->
-		//			replaceScene(GameOver::createScene());
-		//}
+		if(b_1->getTag() == accleratorTag || b_2->getTag() == accleratorTag){
+			b_1->setVisible(false);
+			_isDash = true;
+			startDash();  
+			_remainedDashTime = 100000;
+			CCLOG("start dash");
+
+		}
+		//磁铁吸收金币
+		if(b_1->getTag() == magnetTag || b_2->getTag() == magnetTag){
+			b_1->setVisible(false);
+			_baseManager->getCoinsByMagnet(_runner);
+
+		}
 
 		return false;
 	};

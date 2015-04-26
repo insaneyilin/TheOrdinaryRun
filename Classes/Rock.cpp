@@ -20,10 +20,9 @@ bool Rock::init()
 	}
 
 	auto frameCache = SpriteFrameCache::getInstance();
-	frameCache->addSpriteFramesWithFile("parkour.plist","parkour.png");
+	frameCache->addSpriteFramesWithFile("gamesource.plist","gamesource.png");
 
-	auto sprite = Sprite::createWithSpriteFrameName("rock.png");
-
+	auto sprite = Sprite::createWithSpriteFrameName("barrier.png");
 	setSprite(sprite);
 
 	initBody();
@@ -32,8 +31,9 @@ bool Rock::init()
 }
 
 void Rock::initBody()
-{
-	auto phyBody = PhysicsBody::createEdgeBox(getSprite()->getContentSize());
+{   
+	Vec2 points[]={Vec2(25.8,-23.7),Vec2(14.7,-26.8),Vec2(-23.8,-26.2),Vec2(-0.6,26.9)};
+	auto phyBody = PhysicsBody::createEdgePolygon(points,4);
 	phyBody->setCategoryBitmask(1);
 	phyBody->setCollisionBitmask(1);
 	phyBody->setContactTestBitmask(1);

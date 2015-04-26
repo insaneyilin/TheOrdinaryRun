@@ -79,6 +79,8 @@ public:
 	 */
 	void stopDash();
 
+
+
 	// 位置比例缩放因子
 	static double POS_X_SCALE_FACTOR;
 	static double POS_Y_SCALE_FACTOR;
@@ -159,6 +161,7 @@ private:
 	// 得分标签
 	cocos2d::Label *_scoreTextLabel;
 	cocos2d::Label *_scoreLabel;
+
 };
 
 #endif
