@@ -57,3 +57,9 @@ This command will push your local repo to the remote repo of **your account**.
 ### 3. Submit a pull request
 
 If you want submit your codes, please send a request to pull your fork into the original repository.
+
+---
+
+## Wiki
+
+see https://github.com/insaneyilin/TheOrdinaryRun/wiki 
