@@ -1,6 +1,8 @@
 # TheOrdinaryRun
 A "Parkour" game with Cocos2d-x 3.x.
 
+![](https://camo.githubusercontent.com/0ad8b490aa1f0cbc6cb55346e4ee5fc483b2162f/687474703a2f2f7331342e73696e61696d672e636e2f6f7269676e616c2f30303170706539576779365262473149464a6a346426363930)
+
 ## Project Overview
 
 This project aims to develop a simple 2D "Parkour" game with [Cocos2d-x 3.x](www.cocos2d-x.org) in C++.
